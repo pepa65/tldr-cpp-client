@@ -191,7 +191,7 @@ update_localdb(int verbose)
     }
 
     if (mkdir(outhome, 0755) > 0 && errno != EEXIST) {
-        fprintf(stderr, "%sError%s: Could Not Create Directory: %s\n", 
+        fprintf(stderr, "%sError%s: Could Not Create Directory: %s\n",
                 ERR_S, X_S, outhome);
         rm(outpath, 0);
         return 1;
@@ -204,21 +204,21 @@ update_localdb(int verbose)
 
     if ((stat(outhome, &s) == 0) && (S_ISDIR(s.st_mode))) {
         if (rm(outhome, 0)) {
-            fprintf(stderr, "%sError%s: Could Not Remove: %s\n", 
+            fprintf(stderr, "%sError%s: Could Not Remove: %s\n",
                     ERR_S, X_S, outhome);
             return 1;
         }
     }
 
     if (rename(tmp, outhome)) {
-        fprintf(stderr, "%sError%s: Could Not Rename: %s to %s\n", 
+        fprintf(stderr, "%sError%s: Could Not Rename: %s to %s\n",
                 ERR_S, X_S, tmp, outhome);
         rm(outpath, 0);
         return 1;
     }
 
     if (rm(outpath, 0)) {
-        fprintf(stderr, "%sError%s: Could Not Remove: %s\n", 
+        fprintf(stderr, "%sError%s: Could Not Remove: %s\n",
                 ERR_S, X_S, outpath);
         return 1;
     }

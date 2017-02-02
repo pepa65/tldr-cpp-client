@@ -35,8 +35,7 @@
 #define TLDR_DATE "/.tldrc/date"
 #define TLDR_DATE_LEN (sizeof(TLDR_DATE) - 1)
 
-/* #define TLDR_EXT "/.tldrc/tldr-master/pages/" */
-#define TLDR_EXT "/.tldr/cache/pages/"
+#define TLDR_EXT "/.tldrc/tldr-master/pages/"
 #define TLDR_EXT_LEN (sizeof(TLDR_EXT) - 1)
 
 /* Character colors */
