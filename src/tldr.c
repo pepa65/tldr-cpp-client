@@ -13,7 +13,7 @@
 #include <string.h>
 #include <time.h>
 
-#define VERSION_TAG "v1.3.0"
+#define VERSION_TAG I_S "v1.3.0" X_S
 #ifndef VERSION
     #define VERSION_PRETTY ""
 #else
@@ -21,8 +21,8 @@
 #endif
 
 /* Help and usage */
-void        print_version           (char const *arg);
-void        print_usage             (char const *arg);
+void print_version (char const *arg);
+void print_usage (char const *arg);
 
 /* getopt */
 static int help_flag;
@@ -34,15 +34,16 @@ static int platform_flag;
 static int render_flag;
 static char pbuf[STRBUFSIZ];
 static struct option long_options[] = {
-    { "help", no_argument, &help_flag, 1 },
-    { "version", no_argument, &version_flag, 1 },
-    { "verbose", no_argument, &verbose_flag, 1 },
-
-    { "update", no_argument, &update_flag, 1 },
-    { "clear-cache", no_argument, &clear_flag, 1 },
-    { "platform", required_argument, 0, 'p' },
-    { "render", required_argument, 0, 'r'}, {0, 0, 0, 0 }
+    { "help", no_argument, &help_flag, 1},
+    { "version", no_argument, &version_flag, 1},
+    { "verbose", no_argument, &verbose_flag, 1},
+    { "update", no_argument, &update_flag, 1},
+    { "clear-cache", no_argument, &clear_flag, 1},
+    { "platform", required_argument, 0, 'p'},
+    { "render", required_argument, 0, 'r'},
+    {0, 0, 0, 0}
 };
+static char *short_options = "hVvucp:r:";
 
 int
 main(int argc, char **argv)
@@ -59,7 +60,7 @@ main(int argc, char **argv)
 
     while (1) {
         option_index = 0;
-        c = getopt_long_only(argc, argv, "v", long_options, &option_index);
+        c = getopt_long_only(argc, argv, short_options, long_options, &option_index);
 
         /* reached the end, bail out */
         if (c == -1) {
@@ -67,18 +68,21 @@ main(int argc, char **argv)
         }
 
         switch (c) {
-        case 0:
+        case 'V':
+            version_flag = 1;
             break;
-
         case 'v':
             verbose_flag = 1;
             break;
-
-        case '?':
-            /* do not set help flag, only show getopt error */
-            /* help_flag = 1; */
+        case 'h':
+            help_flag = 1;
             break;
-
+        case 'u':
+            update_flag = 1;
+            break;
+        case 'c':
+            clear_flag = 1;
+            break;
         case 'p': {
             size_t len = strlen(optarg);
             if (len > STRBUFSIZ)
@@ -88,12 +92,10 @@ main(int argc, char **argv)
             pbuf[len] = '\0';
             platform_flag = 1;
         } break;
-
         case 'r': {
             size_t len = strlen(optarg);
             if (len > STRBUFSIZ)
                 exit(EXIT_FAILURE);
-
             memcpy(pbuf, optarg, len);
             pbuf[len] = '\0';
             render_flag = 1;
@@ -108,30 +110,32 @@ main(int argc, char **argv)
     missing_arg = (platform_flag && (optind == argc));
     if (help_flag || missing_arg) {
         print_usage(argv[0]);
-        return EXIT_SUCCESS;
+        /*return EXIT_SUCCESS;*/
     }
     if (version_flag) {
         print_version(argv[0]);
-        return EXIT_SUCCESS;
+        /*return EXIT_SUCCESS;*/
     }
     if (update_flag) {
         if (update_localdb(verbose_flag))
             return EXIT_FAILURE;
-        return EXIT_SUCCESS;
+        /*return EXIT_SUCCESS;*/
     }
     if (clear_flag) {
         if (clear_localdb(verbose_flag))
             return EXIT_FAILURE;
-        return EXIT_SUCCESS;
+        /*return EXIT_SUCCESS;*/
     }
     if (verbose_flag && optind >= argc) {
         print_version(argv[0]);
-        return EXIT_SUCCESS;
+        fprintf(stdout, "\n");
+        print_usage(argv[0]);
+        /*return EXIT_SUCCESS;*/
     }
     if (render_flag) {
         if (print_localpage(pbuf))
             return EXIT_FAILURE;
-        return EXIT_SUCCESS;
+        /*return EXIT_SUCCESS;*/
     }
 
     if (optind < argc) {
@@ -155,12 +159,12 @@ main(int argc, char **argv)
         if (!has_localdb())
             update_localdb(verbose_flag);
         if (print_tldrpage(buf, pbuf[0] != 0 ? pbuf : NULL)) {
-            fprintf(stdout, "This page doesn't exist yet!\n");
-            fprintf(stdout, "Submit new pages here: https://github.com/tldr-pages/tldr\n");
+            fprintf(stdout, "%sThis page doesn't exist yet!%s\n", ERR_S, X_S);
+            fprintf(stdout, "Submit new pages here: %shttps://github.com/tldr-pages/tldr%s\n",
+                    MSG_S, X_S);
             return EXIT_FAILURE;
         }
     }
-
     return EXIT_SUCCESS;
 }
 
@@ -172,28 +176,29 @@ print_version(char const *arg)
        fprintf(stdout, "%s %s\n", arg, VERSION_TAG);
     else
        fprintf(stdout, "%s %s (%s)\n", arg, VERSION_TAG, VERSION_PRETTY);;
-    fprintf(stdout, "Copyright (C) 2016 Arvid Gerstmann\n");
-    fprintf(stdout, "Source available at https://github.com/tldr-pages/tldr-cpp-client\n");
+    fprintf(stdout, "Copyright (C) 2016 %sArvid Gerstmann%s\n", MSG_S, X_S);
+    fprintf(stdout, "Source available at %shttps://github.com/tldr-pages/tldr-cpp-client%s\n",
+        URL_S, X_S);
     /* *INDENT-ON* */
 }
 
 void
 print_usage(char const *arg)
 {
-    char const *out = "usage: %s [-v] [OPTION]... SEARCH\n\n";
+    char const *out = "Usage: %s [OPTION]... TITLE\n\n";
 
     /* *INDENT-OFF* */
     fprintf(stdout, out, arg);
-    fprintf(stdout, "available commands:\n");
-    fprintf(stdout, "    %-20s %-30s\n", "-v", "print verbose output");
-    fprintf(stdout, "    %-20s %-30s\n", "--version", "print version and exit");
-    fprintf(stdout, "    %-20s %-30s\n", "-h, --help", "print this help and exit");
-    fprintf(stdout, "    %-20s %-30s\n", "-u, --update", "update local database");
-    fprintf(stdout, "    %-20s %-30s\n", "-c, --clear-cache", "clear local database");
-    fprintf(stdout, "    %-20s %-30s\n", "-p, --platform=PLATFORM",
-            "select platform, supported are linux / osx / sunos / common");
-    fprintf(stdout, "    %-20s %-30s\n", "-r, --render=PATH",
-            "render a local page for testing purposes");
+    fprintf(stdout, "Available options:\n");
+    fprintf(stdout, "    %-24s %-30s\n", "-v, --verbose", "Print verbose output");
+    fprintf(stdout, "    %-24s %-30s\n", "-V, --version", "Print version and exit");
+    fprintf(stdout, "    %-24s %-30s\n", "-h, --help", "Print this help and exit");
+    fprintf(stdout, "    %-24s %-30s\n", "-u, --update", "Update local database");
+    fprintf(stdout, "    %-24s %-30s\n", "-c, --clear-cache", "Clear local database");
+    fprintf(stdout, "    %-24s %-30s\n", "-r PATH, --render=PATH", "Render a local page");
+    fprintf(stdout, "    %-24s\n                             %-45s\n",
+            "-p PLATFORM, --platform=PLATFORM",
+            "Select PLATFORM: linux / osx / sunos / common");
     /* *INDENT-ON* */
 }
 

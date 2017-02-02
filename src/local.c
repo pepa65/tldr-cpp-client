@@ -54,11 +54,8 @@ check_localdate(void)
     difftime = curtime - oldtime;
     if (difftime > (60 * 60 * 24 * 7 * 2)) {
         /* *INDENT-OFF* */
-        fprintf(stdout, "%s", ANSI_BOLD_ON);
-        fprintf(stdout, "%s", ANSI_COLOR_CODE_FG);
-        fprintf(stdout, "Local data is older than two weeks, use --update to update it.\n\n");
-        fprintf(stdout, "%s", ANSI_COLOR_RESET_FG);
-        fprintf(stdout, "%s", ANSI_BOLD_OFF);
+        fprintf(stdout, "%sLocal data is older than two weeks, use %s%s--update%s%s to update it.%s\n\n",
+            MSG_S, X_S, B_S, X_S, MSG_S, X_S);
         /* *INDENT-ON* */
     }
 
@@ -148,7 +145,8 @@ update_localdb(int verbose)
     if (sstrncat(outfile, &outlen, STRBUFSIZ, TMP_DIR, TMP_DIR_LEN))
         return 1;
     if (mkdtemp(outfile) == NULL) {
-        fprintf(stderr, "Error: Creating Directory: %s\n", outfile);
+        fprintf(stderr, "%sError%s: Creating Directory: %s\n",
+                ERR_S, X_S, outfile);
         return 1;
     }
 
@@ -180,7 +178,7 @@ update_localdb(int verbose)
 
     homedir = gethome();
     if (homedir == NULL) {
-        fprintf(stderr, "Error: HOME not existant\n");
+        fprintf(stderr, "%sError%s: HOME not existant\n", ERR_S, X_S);
         return 1;
     }
 
@@ -193,7 +191,8 @@ update_localdb(int verbose)
     }
 
     if (mkdir(outhome, 0755) > 0 && errno != EEXIST) {
-        fprintf(stderr, "Error: Could Not Create Directory: %s\n", outhome);
+        fprintf(stderr, "%sError%s: Could Not Create Directory: %s\n", 
+                ERR_S, X_S, outhome);
         rm(outpath, 0);
         return 1;
     }
@@ -205,28 +204,33 @@ update_localdb(int verbose)
 
     if ((stat(outhome, &s) == 0) && (S_ISDIR(s.st_mode))) {
         if (rm(outhome, 0)) {
-            fprintf(stderr, "Error: Could Not Remove: %s\n", outhome);
+            fprintf(stderr, "%sError%s: Could Not Remove: %s\n", 
+                    ERR_S, X_S, outhome);
             return 1;
         }
     }
 
     if (rename(tmp, outhome)) {
-        fprintf(stderr, "Error: Could Not Rename: %s to %s\n", tmp, outhome);
+        fprintf(stderr, "%sError%s: Could Not Rename: %s to %s\n", 
+                ERR_S, X_S, tmp, outhome);
         rm(outpath, 0);
         return 1;
     }
 
     if (rm(outpath, 0)) {
-        fprintf(stderr, "Error: Could Not Remove: %s\n", outpath);
+        fprintf(stderr, "%sError%s: Could Not Remove: %s\n", 
+                ERR_S, X_S, outpath);
         return 1;
     }
 
     if (update_localdate()) {
-        fprintf(stderr, "Error: Could not update last updated date\n");
+        fprintf(stderr, "%sError%s: Could not update last updated date\n",
+                ERR_S, X_S);
         return 1;
     }
 
-    fprintf(stdout, "Successfully updated local database\n");
+    fprintf(stdout, "%sSuccessfully updated local database%s\n",
+            MSG_S, X_S);
     return 0;
 }
 
@@ -251,9 +255,11 @@ clear_localdb(int verbose)
         return 1;
 
     if (verbose) {
-        fprintf(stdout, "Successfully removed %s\n", tmp);
+        fprintf(stdout, "%sSuccessfully removed %s%s\n",
+                MSG_S, X_S, tmp);
     } else {
-        fprintf(stdout, "Successfully removed local database\n");
+        fprintf(stdout, "%sSuccessfully removed local database%s\n",
+                MSG_S, X_S);
     }
 
     return 0;

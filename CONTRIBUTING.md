@@ -6,7 +6,6 @@ are most welcome!
 Please read the whole document before contributing, to minimize the chances of
 your change being rejected.
 
-
 # Guidelines
 
 Please follow these few guidelines, to make sure your pull request will be accepted:
@@ -18,13 +17,11 @@ Please follow these few guidelines, to make sure your pull request will be accep
 - squash the commits to the required minimum, and name them correctly
 - keep your commits small and contain one task or one fix (keep it "atomic")
 
-
 # Choosing the right branch
 
 All pull requests have to be filed against the `master` branch, since this is
 where all of the development is happening.
 Pull requests to other branches will not be accepted.
-
 
 # How to name your commits
 
@@ -65,11 +62,9 @@ Complete example:
     Resolves: #123
     See also: #456, #789
 
-
 # Licensing
 
-My submitting a patch you agree to license your patch under the MIT License.
-
+By submitting a patch you agree to license your patch under the MIT License.
 
 [pull requests]:    https://help.github.com/articles/using-pull-requests/
 [coding standard]:  https://github.com/tldr-pages/tldr-cpp-client/blob/master/STYLE.md#

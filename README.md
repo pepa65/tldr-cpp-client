@@ -1,8 +1,6 @@
 # tldr c client <a href='https://travis-ci.org/tldr-pages/tldr-cpp-client'><img src='https://travis-ci.org/tldr-pages/tldr-cpp-client.svg' align="right"></a>
 
-
 A command line client for tldr, written in plain ISO C90.
-
 
 ## Installing
 
@@ -28,8 +26,6 @@ make install        # install tldr
 
 The default prefix for installation is `/usr/local/bin`.
 
-
-
 ## Building
 
 Building the `tldr` client is pretty straightforward.
@@ -52,7 +48,6 @@ Just call `make` and `tldr` will build itself.
 make
 ```
 
-
 ## Autocompletion
 
 Autocompletion is supported for `bash`, `zsh`, and `fish` and can be added by sourcing
@@ -73,29 +68,25 @@ mv autocomplete/complete.zsh ~/.tldr.complete
 echo "source ~/.tldr.complete" >> ~/.zshrc
 ```
 
-
-
 ## Usage
 
 ```
-usage: ./tldr [-v] [OPTION]... SEARCH
+Usage: ./tldr [OPTION]... TITLE
 
-available commands:
-    -v                   print verbose output
-    --version            print version and exit
-    -h, --help           print this help and exit
-    -u, --update         update local database
-    -c, --clear-cache    clear local database
-    -p, --platform=PLATFORM select platform, supported are linux / osx / sunos / common
-    -r, --render=PATH    render a local page for testing purposes
+Available options:
+    -v, --verbose            Print verbose output
+    -V, --version            Print version and exit
+    -h, --help               Print this help and exit
+    -u, --update             Update local database
+    -c, --clear-cache        Clear local database
+    -r PATH, --render=PATH   Render a local page for testing purposes
+    -p PLATFORM, --platform=PLATFORM
+                             Select platform: linux / osx / sunos / common
 ```
-
 
 ## Contributing
 
 Please read the [CONTRIBUTING.md](https://github.com/tldr-pages/tldr-cpp-client/blob/master/CONTRIBUTING.md) for details.
-
-
 
 ## License
 

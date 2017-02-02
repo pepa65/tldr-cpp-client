@@ -72,47 +72,43 @@ parse_tldrpage(char const *input)
         c = input[i];
         if (start == -1) {
             switch (c) {
+            case '#':
+                start = i;
+                fprintf(stdout, "%s", TITLE_S);
+                continue;
+
             case '>':
                 start = i;
-                fprintf(stdout, "%s", ANSI_COLOR_EXPLANATION_FG);
+                fprintf(stdout, "%s", DESCRIPTION_S);
                 continue;
 
             case '-':
                 start = i;
-                fprintf(stdout, "%s", ANSI_COLOR_COMMENT_FG);
+                fprintf(stdout, "%s", EXAMPLE_S);
                 continue;
 
             case '`':
                 start = i;
-                fprintf(stdout, "%s", ANSI_COLOR_CODE_FG);
-                fprintf(stdout, "    ");
-                continue;
-
-            case '#':
-                start = i;
-                fprintf(stdout, "%s", ANSI_BOLD_ON);
-                fprintf(stdout, "%s", ANSI_COLOR_TITLE_FG);
+                fprintf(stdout, "%s    ", COMMAND_S);
                 continue;
             }
         } else if (start > -1) {
             if (input[i] == '{' && input[i + 1] == '{') {
                 fprintf(stdout, "%.*s", i - (start + 1), input + (start + 1));
-                fprintf(stdout, "%s", ANSI_BOLD_OFF);
-                fprintf(stdout, "%s", ANSI_COLOR_RESET_FG);
-                fprintf(stdout, "%s", ANSI_COLOR_CODE_PLACEHOLDER_FG);
+                fprintf(stdout, "%s", X_S);
+                fprintf(stdout, "%s", VALUE_S);
 
                 start = i;
                 for (i = i + 1; i < len; i++) {
                     if (input[i] == '}' && input[i + 1] == '}') {
                         fprintf(stdout, "%.*s", i - (start + 2),
                                 input + (start + 2));
-                        fprintf(stdout, "%s", ANSI_COLOR_RESET_FG);
-                        fprintf(stdout, "%s", ANSI_COLOR_CODE_FG);
+                        fprintf(stdout, "%s", X_S);
+                        fprintf(stdout, "%s", COMMAND_S);
                         start = i + 1;
                         break;
                     }
                 }
-
                 continue;
             }
         }
@@ -127,14 +123,10 @@ parse_tldrpage(char const *input)
             } else {
                 fprintf(stdout, "%.*s\n", i - (start + 2), input + (start + 2));
             }
-
-            fprintf(stdout, "%s", ANSI_BOLD_OFF);
-            fprintf(stdout, "%s", ANSI_COLOR_RESET_FG);
-            fprintf(stdout, "\n");
+            fprintf(stdout, "%s\n", X_S);
             start = -1;
         }
     }
-
     return 0;
 }
 
@@ -171,9 +163,10 @@ print_tldrpage(char const *input, char const *poverride)
         platform = poverride;
         if (strcmp(platform, "linux") != 0 && strcmp(platform, "osx") != 0 &&
             strcmp(platform, "common") != 0 && strcmp(platform, "sunos") != 0) {
-            fprintf(stderr, "Error: platform %s is unsupported\n", platform);
-            fprintf(
-                stderr, "Supported platforms: linux / osx / sunos / common\n");
+            fprintf(stderr, "%sError%s: platform %s%s%s is unsupported\n",
+                ERR_S, X_S, B_S, platform, X_S);
+            fprintf(stderr, "Supported platforms: %slinux / osx / sunos / common%s\n",
+                B_S, X_S);
             exit(EXIT_FAILURE);
         }
     }
@@ -207,7 +200,6 @@ print_tldrpage(char const *input, char const *poverride)
             }
         }
     }
-
     construct_url(url, URLBUFSIZ, input, platform);
 
     /* make clang's static analyzer happy */
@@ -219,7 +211,6 @@ print_tldrpage(char const *input, char const *poverride)
         if (output == NULL)
             return 1;
     }
-
     parse_tldrpage(output);
 
     free(output);
@@ -235,7 +226,6 @@ print_localpage(char const *path)
         free(output);
         return 0;
     }
-
     return 0;
 }
 

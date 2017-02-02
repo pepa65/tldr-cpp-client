@@ -35,17 +35,54 @@
 #define TLDR_DATE "/.tldrc/date"
 #define TLDR_DATE_LEN (sizeof(TLDR_DATE) - 1)
 
-#define TLDR_EXT "/.tldrc/tldr-master/pages/"
+/* #define TLDR_EXT "/.tldrc/tldr-master/pages/" */
+#define TLDR_EXT "/.tldr/cache/pages/"
 #define TLDR_EXT_LEN (sizeof(TLDR_EXT) - 1)
 
-#define ANSI_COLOR_RESET_FG                     "\x1b[39m"
-#define ANSI_COLOR_TITLE_FG                     "\x1b[39m"
-#define ANSI_COLOR_EXPLANATION_FG               "\x1b[39m"
-#define ANSI_COLOR_COMMENT_FG                   "\x1b[32m"
-#define ANSI_COLOR_CODE_FG                      "\x1b[31m"
-#define ANSI_COLOR_CODE_PLACEHOLDER_FG          "\x1b[34m"
-#define ANSI_BOLD_ON                            "\x1b[1m"
-#define ANSI_BOLD_OFF                           "\x1b[22m"
+/* Character colors */
+#define BLACK                                   "\x1b[30m"
+#define RED                                     "\x1b[31m"
+#define GREEN                                   "\x1b[32m"
+#define YELLOW                                  "\x1b[33m"
+#define BLUE                                    "\x1b[34m"
+#define MAGENTA                                 "\x1b[35m"
+#define CYAN                                    "\x1b[36m"
+#define WHITE                                   "\x1b[37m"
+#define DEFAULT                                 "\x1b[39m"
+
+/* Background colors */
+#define BLACK_B                                 "\x1b[40m"
+#define RED_B                                   "\x1b[41m"
+#define GREEN_B                                 "\x1b[42m"
+#define YELLOW_B                                "\x1b[43m"
+#define BLUE_B                                  "\x1b[44m"
+#define MAGENTA_B                               "\x1b[45m"
+#define CYAN_B                                  "\x1b[46m"
+#define WHITE_B                                 "\x1b[47m"
+
+/* Style elements */
+#define B                   /*  BOLD       */   "\x1b[1m"
+#define DIM                                     "\x1b[2m"
+#define U                   /*  UNDERLINE  */   "\x1b[4m"
+#define BLINK                                   "\x1b[5m"
+#define REVERSE                                 "\x1b[7m"
+
+/* Reset all styles */
+#define X_S                 /*  RESET      */   "\x1b[0m"
+
+/* Document styles */
+#define TITLE_S             /*   # ____    */   B YELLOW
+#define DESCRIPTION_S       /*   > ____.   */   YELLOW
+#define EXAMPLE_S           /*   - ____:   */   B GREEN
+#define COMMAND_S           /*   `____`    */   B BLUE
+#define VALUE_S             /*   {{____}}  */   BLACK_B B BLUE
+
+/* Output styles */
+#define MSG_S                                   B GREEN
+#define ERR_S                                   B RED
+#define URL_S                                   B YELLOW
+#define B_S                                     B WHITE
+#define I_S                                     B CYAN
 
 /* local.c */
 long        check_localdate         (void);
